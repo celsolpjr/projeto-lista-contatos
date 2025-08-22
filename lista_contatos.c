@@ -8,6 +8,8 @@ typedef struct {
 } Contato;
 
 void inserir_contato(Contato **ptr_contatos, int *tamanho);
+void listar_contatos(Contato *ptr_contatos, int tamanho);
+void buscar_contato(Contato *ptr_contatos, int tamanho);
 
 int main()
 {
@@ -27,6 +29,12 @@ int main()
         switch(opcao) {
             case 1:
                 inserir_contato(&contatos, &tamanho);
+                break;
+            case 2:
+                listar_contatos(contatos, tamanho);
+                break;
+            case 3:
+                buscar_contato(contatos, tamanho);
                 break;
             case 5:
                 free(contatos);
@@ -65,4 +73,18 @@ void inserir_contato(Contato **ptr_contatos, int *tamanho) {
     (*tamanho)++;
 
     printf("\nContato cadastrado!\n\n");
+}
+
+void listar_contatos(Contato *ptr_contatos, int tamanho) {
+    
+    if (tamanho == 0) {
+        printf("\nNenhum contato cadastrado!\n\n");
+        return;
+    }
+
+    printf("\n--- Lista de Contatos ---\n");
+    for (int i = 0; i < tamanho; i++) {
+        printf("%d) Nome: %s | Telefone: %s\n", i + 1, ptr_contatos[i].nome, ptr_contatos[i].telefone);
+    }
+    printf("-----------------------------------------------------------\n\n");
 }
