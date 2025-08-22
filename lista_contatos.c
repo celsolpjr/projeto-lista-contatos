@@ -10,6 +10,7 @@ typedef struct {
 void inserir_contato(Contato **ptr_contatos, int *tamanho);
 void listar_contatos(Contato *ptr_contatos, int tamanho);
 void buscar_contato(Contato *ptr_contatos, int tamanho);
+void remover_contato(Contato **ptr_contatos, int *tamanho);
 
 int main()
 {
@@ -35,6 +36,9 @@ int main()
                 break;
             case 3:
                 buscar_contato(contatos, tamanho);
+                break;
+            case 4:
+                remover_contato(&contatos, &tamanho);
                 break;
             case 5:
                 free(contatos);
@@ -87,4 +91,58 @@ void listar_contatos(Contato *ptr_contatos, int tamanho) {
         printf("%d) Nome: %s | Telefone: %s\n", i + 1, ptr_contatos[i].nome, ptr_contatos[i].telefone);
     }
     printf("-----------------------------------------------------------\n\n");
+}
+
+void buscar_contato(Contato *ptr_contatos, int tamanho) {
+    char contato[50];
+
+    printf("Nome do contato a ser buscado: ");
+    fgets(contato, sizeof(contato), stdin);
+    contato[strcspn(contato, "\n")] = '\0';
+
+    for (int i = 0; i < tamanho; i++) {
+        if (strcmp(ptr_contatos[i].nome, contato) == 0) {
+            printf("\n--- Contato encontrado ---\n");
+            printf("Nome: %s | Telefone: %s\n", ptr_contatos[i].nome, ptr_contatos[i].telefone);
+            printf("-----------------------------------------------------------------------\n\n");
+            return;
+        }
+    }
+
+    printf("\nContato nao encontrado!\n\n");
+}
+
+void remover_contato(Contato **ptr_contatos, int *tamanho) {
+    char contato[50];
+
+    printf("Nome do contato a ser removido: ");
+    fgets(contato, sizeof(contato), stdin);
+    contato[strcspn(contato, "\n")] = '\0';
+
+    for (int i = 0; i < *tamanho; i++) {
+        if (strcmp((*ptr_contatos)[i].nome, contato) == 0) {
+
+            for (int j = i; j < (*tamanho) - 1; j++) {
+                (*ptr_contatos)[j] = (*ptr_contatos)[j + 1];
+            }
+
+            (*tamanho)--;
+
+            Contato *tmp = realloc((*ptr_contatos), (*tamanho) * sizeof(Contato));
+
+            if (tmp == NULL) {
+                printf("\nAlocacao de memoria falhou!\n");
+                return;
+            }
+
+            *ptr_contatos = tmp;
+
+            printf("\nContato removido!\n");
+            printf("-----------------------------------------------------------------\n\n");
+            return;
+        }
+    }
+
+    printf("\nContato nao encontrado!\n");
+    printf("-----------------------------------------------------------------\n\n");
 }
